@@ -1,0 +1,4 @@
+flask
+whisper~=1.0
+python-dotenv~=0.21.0
+werkzeug
