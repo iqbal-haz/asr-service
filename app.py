@@ -8,11 +8,11 @@ import whisper
 load_dotenv()
 
 ALLOWED_EXTENSIONS = set(['flac', 'mp3', 'wav', 'm4a', 'ogg', 'aac', 'ac3', 'wma'])
-UPLOAD_FOLDER = TemporaryDirectory()
+TEMP_STORAGE = TemporaryDirectory()
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY')
-app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+app.config['TEMP_STORAGE'] = TEMP_STORAGE
 
 model = whisper.load_model("small")
 
@@ -22,22 +22,27 @@ def allowed_file(filename):
 @app.route("/", methods=["POST"])
 def speech_to_text():
     audio = request.files['audio']
+    lang = request.args.get("language")
     if audio.filename == '':
         print('No audio file selected')
         return
 
     if audio and allowed_file(audio.filename):
         filename = secure_filename(audio.filename)
-        audio_path = os.path.join(app.config['UPLOAD_FOLDER'].name, filename)
+        audio_path = os.path.join(app.config['TEMP_STORAGE'].name, filename)
         audio.save(audio_path)
 
-        result = model.transcribe(audio_path, fp16=False)
-        context = jsonify(text=result["text"])
+        if lang:
+            result = model.transcribe(audio_path, fp16=False, verbose=True, language=lang)
+            context = jsonify(text=result["text"])
+        else:
+            result = model.transcribe(audio_path, fp16=False, verbose=True)
+            context = jsonify(text=result["text"], language=result['language'])
         print(context.data)
 
         return context
 
 if __name__ == "__main__":
     app.run()
-    UPLOAD_FOLDER.cleanup()
-    app.config['UPLOAD_FOLDER'].cleanup()
+    TEMP_STORAGE.cleanup()
+    app.config['TEMP_STORAGE'].cleanup()
