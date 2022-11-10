@@ -1,4 +1,4 @@
 flask
-whisper~=1.0
+git+https://github.com/openai/whisper.git@main#egg=whisper
 python-dotenv~=0.21.0
 werkzeug
