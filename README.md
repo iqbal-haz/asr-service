@@ -2,7 +2,7 @@
 
 `POST /`
 #### <b>Parameter</b>
-* **language** : _language used in audio, default None (use language detection)_ <br>
+* **language** : _language spoken in audio, default None (use language detection)_ <br>
 Please refer [here](https://github.com/openai/whisper#available-models-and-languages) for available language choices.
 
 No parameter
