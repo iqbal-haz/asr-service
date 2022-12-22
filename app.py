@@ -8,7 +8,7 @@ import whisper
 
 load_dotenv()
 
-ALLOWED_EXTENSIONS = set(['flac', 'mp3', 'wav', 'm4a', 'ogg', 'aac', 'ac3', 'wma'])
+ALLOWED_EXTENSIONS = set(['flac', 'mp3', 'wav', 'm4a', 'ogg', 'aac', 'ac3', 'wma', 'mp4'])
 TEMP_STORAGE = TemporaryDirectory()
 
 app = Flask(__name__)
